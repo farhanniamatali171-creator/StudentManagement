@@ -1,50 +1,94 @@
-class StudentManagement {
+class StudentEnrollment {
 
-    static String universityName = "COMSATS";
-    static String courseName = "Object Oriented Programming";
-    static int studentCount = 0;
-    String name;
-    int rollNo;
-    double marks;
-    final int MAX_MARKS = 100;
-    final int PASSING_MARKS = 50;
-   StudentManagement(String name, int rollNo, double marks) {
-        this.name = name;
-        this.rollNo = rollNo;
-        this.marks = marks;
-        studentCount++;
-    }
-    void displayStudentInfo() {
-        System.out.println("Name: " + name);
-        System.out.println("Roll No: " + rollNo);
-        System.out.println("Marks: " + marks);
-        System.out.println("Course: " + courseName);
-        System.out.println("University: " + universityName);
-        System.out.println("----------------------");
+   
+    private String studentName;
+    private final int registrationId;
+    private double academicScore;
+    //Static variables
+    public static String institution = "COMSATS University";
+    public static final String COURSE_TITLE = "Object Oriented Programming";
+    private static int activeEnrollments = 0;
+    //Static final  variables
+    public static final int SCORE_CEILING = 100;
+    public static final int MIN_PASS_SCORE = 50;
+
+    //Constructor
+    public StudentEnrollment(String studentName, int registrationId, double academicScore) {
+        this.studentName = studentName;
+        this.registrationId = registrationId;
+        this.academicScore = academicScore;
+        activeEnrollments++; 
     }
 
-    static void displayUniversity() {
-        System.out.println("University: " + universityName);
-        System.out.println("Total Students: " + studentCount);
+    // Overloaded Constructor 
+    public StudentEnrollment(String studentName, int registrationId) {
+        this(studentName, registrationId, 0.0); 
     }
-    static void changeUniversityName(String newName) {
-        universityName = newName;
+
+    //Mutator Method 
+    public void assignScore(double newScore) {
+        if (newScore >= 0 && newScore <= SCORE_CEILING) {
+            this.academicScore = newScore;
+        } else {
+            System.out.println("Invalid score assignment for " + studentName);
+        }
     }
-    final void showMaxMarks() {
-        System.out.println("Max Marks: " + MAX_MARKS);
-        System.out.println("Passing Marks: " + PASSING_MARKS);
+
+    //Method for displaying records
+    public void printRecord() {
+        String performanceStatus = (academicScore >= MIN_PASS_SCORE) ? "CREDIT" : "REMEDIAL/PENDING";
+        
+        System.out.println("=== Student File ===");
+        System.out.println("ID: " + registrationId);
+        System.out.println("Name: " + studentName);
+        System.out.println("Current Score: " + academicScore + " / " + SCORE_CEILING);
+        System.out.println("Academic Status: " + performanceStatus);
+        System.out.println("Enrolled at: " + institution + " [" + COURSE_TITLE + "]");
+        System.out.println("==========================================================\n");
     }
-	   public static void main(String[] args) {
-        StudentManagement s1 = new StudentManagement("Farhan", 101, 95);
-        StudentManagement s2 = new StudentManagement("Ahmed", 102, 85);
-        StudentManagement s3 = new StudentManagement("Ali", 103, 75);
-        s1.displayStudentInfo();
-        s2.displayStudentInfo();
-        s3.displayStudentInfo();
-        StudentManagement.displayUniversity();
-		StudentManagement.changeUniversityName("FAST University");
-        System.out.println("\nAfter Changing University Name:");
-        StudentManagement.displayUniversity();
-        s1.showMaxMarks();
+
+    //Static Methods
+    public static void printSystemRegistry() {
+        System.out.println("----- REGISTRY METRICS -----");
+        System.out.println("Campus: " + institution);
+        System.out.println("Total Dynamic Registrations: " + activeEnrollments);
+        System.out.println("----------------------------\n");
+    }
+
+    //Change insitution name
+    public static void modifyInstitution(String corporateName) {
+        institution = corporateName;
+    }
+
+    //Final Method
+    public final void printEvaluationPolicy() {
+        System.out.println(">> Standard Policy Threshold: " + MIN_PASS_SCORE + " points required to clear.");
+    }
+
+  
+    public static void main(String[] args) {
+        // Creating Objects
+        StudentEnrollment studentA = new StudentEnrollment("Farhan", 101, 95.5);
+        StudentEnrollment studentB = new StudentEnrollment("Ahmed", 102, 48.0);
+        StudentEnrollment studentC = new StudentEnrollment("Ali", 103); 
+
+        //Display initial batch records
+        studentA.printRecord();
+        studentB.printRecord();
+        studentC.printRecord();
+
+        //View registry metrics via class level
+        StudentEnrollment.printSystemRegistry();
+
+        //show state change 
+        System.out.println("... Updating system profiles ...\n");
+
+        //Grading the pending student
+        studentC.assignScore(78.5); 
+        StudentEnrollment.modifyInstitution("FAST University");
+
+        //Verify updates
+        studentC.printRecord();
+        StudentEnrollment.printSystemRegistry();
     }
 }
